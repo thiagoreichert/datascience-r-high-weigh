@@ -1,0 +1,464 @@
+---
+title: "DataScience - R Notebook IMC"
+output: html_notebook
+---
+Autor: Thiago Reichert
+
+_____________________________________________________________________
+
+Dicas de Uso:
+
+Atalhos para uso no R:
+Clicar em *Run* atalho *Ctrl+Shift+Enter* para executar cada comando. 
+
+Clicar em *Insert Chunk* ou atalho *Ctrl+Alt+I* para adicionar um linha de comando.
+
+Para abrir o manual de uma função deve-se usar o ? seguido do nome da função, por exemplo ?dim, ?length
+____________________________________________________________________
+
+INFORMAÇÕES E COLETA DE DADOS
+
+Dataset:
+Foi utilizado o dataset "500-person-gender-height-weight-bodymassindex" baixado em https://www.kaggle.com/yersever/500-person-gender-height-weight-bodymassindex .
+
+Os dados do dataset possuem as informações corporais de 500 pessoas.
+
+Há 4 varíáveis:
+
+  - Gender (Sexo) : Male (Masculino) , Female (Feminino)
+
+  - Height (Altura) : Number (cm)
+
+  - Weight (Peso) : Number (kg)
+
+  - Index :
+    0 - Extremely Weak (muito magro)
+  
+    1 - Weak (magro)
+  
+    2 - Normal (normal)
+  
+    3 - Overweight (acima do peso)
+  
+    4 - Obesity (obeso)
+  
+    5 - Extreme Obesity (muito obeso)
+
+Para realizar a coleta dos dados, a variável "imc" recebe os valores do arquivo imc.csv  
+OBS: Salvar o arquivo imc.csv no diretório de Worskpace do R.
+
+```{r}
+imc <- read.csv("imc.csv")
+```
+___________________________________________________________________________
+
+EXPLORAÇÃO DOS DADOS
+
+Estrutura do dataset:
+
+Antes de iniciar a exploração dos dados, é interessante saber qual tipo de dados do dataset.
+```{r}
+str(imc)
+```
+Com o comando str, é possível identificar que o dataset possui 500 registros e 4 variáveis, sendo uma varíavel gender com dois valores (female e male) (dados categóricos), height do tipo int, weight do tipo int (dados intervalares) e index do tipo int (dados ordinais).
+
+______________________________________________________________________
+
+Resumo das Estatísticas:
+
+Com a função "length()" é possível verificar o tamanho de um objeto, de uma varíavel, de uma amostra de valores de uma varíavel etc.  
+Com a função "dim()" é possível verificar a dimensão de um objeto ou um dataset.
+
+Quantidade de variáveis/colunas do dataset:
+```{r}
+length(imc)
+```
+________________________________________________________________________
+
+Quantidade de dados (utilizando a coluna "gender" por exemplo):
+```{r}
+dim(imc)
+```
+
+______________________________________________________________________
+
+Quantidade de homens e mulheres respectivamente:
+```{r}
+length(imc$gender[imc$gender=='Male'])
+length(imc$gender[imc$gender=='Female'])
+```
+
+_______________________________________________________________________
+
+Para visualizar os primeiros elementos do dataset pode ser usado a função "head()":
+```{r}
+head(imc)
+```
+Esta é maneira de identificar como pode ser iniciado a exploração dos dados.
+
+____________________________________________________________________________
+
+Valores Máximos
+
+Com a função "max()" é possível identificar os valores máximos dos pesos e das alturas:
+
+Valor máximo da altura de todas as pessoas:
+```{r}
+max(imc$height)
+```
+
+Valor máximo do peso de todas as pessoas:
+```{r}
+max(imc$weight)
+```
+________________________________________________________________________
+Com a função "min()" é possível identificar os valores mínimos dos pesos e das alturas:
+
+Valor mínimo da altura de todas as pessoas:
+```{r}
+min(imc$height)
+```
+
+Valor mínimo do peso de todas as pessoas:
+```{r}
+min(imc$weight)
+```
+
+Saber os valores máximos e mínimos são interessantes para identificar o intervalo de cada uma das variáveis, neste caso, peso e altura.
+Agora sabe-se que a altura possui um intervalo de 140cm até 199cm e o peso de 50kg a 160kg. O índice não há necessidade, pois sabe-se que o intervalo é entre 1 e 5 conforme especificação do dataset.
+________________________________________________________________________
+
+Médias
+
+Com a função "mean()" é possível identificar a média dos pesos, alturas e índices:
+
+Média das alturas de todas as pessoas:
+```{r}
+mean(imc$height)
+```
+
+Média de peso de todas as pessoas:
+```{r}
+mean(imc$weight)
+```
+
+Média do índice de obesidade:
+```{r}
+mean(imc$index)
+```
+
+Apenas utilizando a média é possível identificar alguns dados interessantes para a análise. O conjunto de dados apresenta uma população com média de altura 169 cm e média de peso 106 kg, acima do peso ideal e próxima da obesidade, conforme a média de índices de 3,748. 
+
+_________________________________________________________________________________
+
+Medianas
+
+Com a função "median()" é possível identificar a mediana dos pesos, alturas e índices:
+
+Mediana das alturas de todas as pessoas:
+```{r}
+median(imc$height)
+```
+
+Mediana de peso de todas as pessoas:
+```{r}
+median(imc$weight)
+```
+
+Mediana do índice de obesidade:
+```{r}
+median(imc$index)
+```
+As médias e medianas possuem valores muitos próximos. Com a mediana é possível identificar que a maioria do conjunto está com o índice corporal de obesidade (4).
+______________________________________________________________________
+Quartis
+
+Com a função "quantile()" é possível identificar os quartis dos pesos, alturas e índices:
+
+Quartis das alturas de todas as pessoas:
+```{r}
+quantile(imc$height)
+```
+
+Quartis de peso de todas as pessoas:
+```{r}
+quantile(imc$weight)
+```
+
+Quartis do índice de obesidade:
+```{r}
+quantile(imc$index)
+```
+Com os quartis mais uma vez destaca-se os valores dos índices, onde já é possível identificar que pelo menos 25% da população possui o índice de obesidade 5, e mais da metade da população possui um índice de 4 ou mais.
+_________________________________________________________________________
+Desvio Padrão
+
+Com a função "sd()" é possível identificar o desvio padrâo dos pesos, alturas e índices:
+
+Desvio padrão das alturas de todas as pessoas:
+```{r}
+sd(imc$height)
+```
+
+Desvio padrão de peso de todas as pessoas:
+```{r}
+sd(imc$weight)
+```
+
+Desvio padrão do índice de obesidade:
+```{r}
+sd(imc$index)
+```
+
+Com o devio padrão, é possível identificar para análises que o conjunto de dados possui uma maior diferença de valores em relação a média na varíavel do peso.
+
+__________________________________________________________________
+Variância
+
+Com a função "var()" é possível identificar a variância dos pesos, alturas e índices:
+
+Variância das alturas de todas as pessoas:
+```{r}
+var(imc$height)
+```
+
+Variância dos pesos de todas as pessoas:
+```{r}
+var(imc$weight)
+```
+
+Variância do índice de obesidade:
+```{r}
+var(imc$index)
+```
+
+___________________________________________________________________
+
+É possível visualizar um resumo dos principais dados estatísticos do dataset com o comando "summary".
+
+```{r}
+summary(imc)
+```
+Com o summary, é possível identificar que o dataset possui registros de 255 mulheres e 245 homens. Também apresenta os valores mínimos, máximos, quartis, médias e medianas dos pesos, alturas e índices.
+
+__________________________________________________________________________________
+Também é possível visualizar graficamente as informações da mediana, primeiro e terceiro quartil, maior e menor elemento da distribuição com a função "boxplot()"
+
+Boxplot das alturas:
+```{r}
+boxplot(imc$height)
+```
+
+Boxplot das alturas:
+```{r}
+boxplot(imc$weight)
+```
+
+Boxplot dos índices:
+```{r}
+boxplot(imc$index)
+```
+
+__________________________________________________________________________________
+DISTRIBUIÇÃO DOS DADOS
+
+Com as funções "qqnorm()" e "qqline()" é possível verificar se a distribuição dos dados é normal.
+
+Gráfico de normalidade e linha de melhor ajuste das alturas:
+```{r}
+qqnorm(imc$height)
+qqline(imc$height)
+```
+É possível verificar com o gráfico que os dados não estão bem distribuídos.
+
+__________________________________________________________________________
+
+Gráfico de normalidade e linha de melhor ajuste dos pesos:
+```{r}
+qqnorm(imc$weight)
+qqline(imc$weight)
+```
+É possível verificar com o gráfico que os dados não estão bem distribuídos.
+
+____________________________________________________________________________
+
+Gráfico de normalidade e linha de melhor ajuste dos índices:
+```{r}
+qqnorm(imc$index)
+qqline(imc$index)
+```
+
+________________________________________________________________________
+Teste de Shapiro
+
+Com o teste de Shapiro-Wilk, também é possível verificar se há uma distribuição normal dos dados.
+É utilizada a função "shapiro.test()" para criar um Teste de Shapiro.
+
+Teste de Shapiro para alturas:
+```{r}
+shapiro.test(imc$height)
+```
+
+Teste de Shapiro para pesos:
+```{r}
+shapiro.test(imc$weight)
+```
+
+Ambos dão um valor muito baixo, abaixo de 0,5 (padrão), comprovando que os dados não estão bem distribuídos.
+
+_______________________________________________________________________________________
+Histograma
+
+O Histograma é interessante para visualizar rapidamente a frequência de dados em determinadas classes. Com a função "hist()" é possível criar um histograma.
+
+Histograma das alturas:
+```{r}
+hist(imc$height)
+```
+
+Histograma dos pesos:
+```{r}
+hist(imc$weight)
+```
+
+Histograma dos índices de imc:
+```{r}
+hist(imc$index)
+```
+
+Com os histogramas é possível identificar uma grande parcela da população com a altura no intervalo de 175cm e 190cm. Para o histograma de pesos, destaca-se a alta frequeência de pessoas com peso acima de 100kg, sendo um alto número acima de 130kg, o que ajuda a justificar a falta de normalidade dos dados. Para o índice, destaca-se a grande frequência de pessoas com índice de IMC = 5. 
+
+_______________________________________________________________________________________
+Intervalo de Confiança
+
+Com a função "t.test()" é possível descobrir o intervalo de confiança de um conjunto de dados.
+
+```{r}
+t.test(imc$height)
+```
+Intervalo de confiança da variável altura que possui média 169,944 é de 168,50 a 171,38.
+
+```{r}
+t.test(imc$weight)
+```
+Intervalo de confiança da variável peso que possui média 106 é de 103,15 a 108,84.
+
+```{r}
+t.test(imc$index)
+```
+Intervalo de confiança da variável index que possui média 3,75 é de 3,63 a 3,87.
+
+Como foi possível visualizar na saída da função, o intervalo de confiança padrão da função t.test é de 95%.
+
+Exercício: Fazer o intervalo de confiança para cada uma das variáveis.
+
+Intervalo de confiança de 90% da altura
+```{r}
+
+```
+
+Intervalo de confiança de 85% do peso
+```{r}
+
+```
+
+Intervalo de confiança de 99% do índice
+```{r}
+
+```
+
+_____________________________________________________________________________________________
+
+Correlação
+
+Para a calcular a correção, usa-se a função "cor()", sendo que a função permite apenas variáveis númericas.
+
+Correlação entre altura e peso:
+```{r}
+cor(imc$height,imc$weight)
+```
+O resultado da correlação entre altura e peso é positiva, próxima a 0. Neste caso é uma correlação positiva fraca. 
+_____________________________________________________________________________________________
+
+Correlação entre altura e índice:
+
+```{r}
+cor(imc$height,imc$index)
+```
+O resultado da correlação entre altura e peso é -0,42. Neste caso é uma correlação negativa fraca. 
+_________________________________________________________________________________________________
+Correlação entre peso e índice:
+
+```{r}
+cor(imc$weight,imc$index)
+```
+Como é esperado, a correlação entre peso e índice é alta, de 0,80, sendo considerada uma correlação positiva forte. Ou seja, quanto maior o peso de uma pessoa, maior a tendência de ela possuir uma índice de obesidade alto.
+
+______________________________________________________________________________________________
+
+Regressão linear Simples
+
+Para a regressão linear simples deve ser utilizada a função "lm()" (linear model).
+
+```{r}
+modelo = lm(weight ~ height, data=imc)
+modelo
+```
+Nesta situação foi criada uma variável modelo para receber o resultado da função lm. Ao chamar a variável modelo, o resultado é a interceptação e a inclinação. 
+
+____________________________________________________________________________________
+Para uma primeira análise do modelo pode ser utiliza a função "plot()" simplesmente chamando a variável "modelo" 
+```{r}
+plot(modelo)
+```
+O resultado é diversos gráficos, entre eles o gráfico de normalidade e o gráfico de residuais.
+
+__________________________________________________________________________________________
+
+Também é possível utilizar a função "summary()" para visualizar as informações de residuais, coeficientes, inclinação, etc.
+
+```{r}
+summary(modelo)
+```
+
+______________________________________________________________________________________________
+Linha de melhor ajuste
+
+Para definir a linha de melhor ajuste é utilizada a função "abline()".
+
+```{r}
+plot(weight ~ index, data=imc)
+abline(modelo)
+```
+_____________________________________________________________________________________
+Previsão
+
+Para o cálculo da previsão é utilizada a função "predict()"
+
+Exercício: Utilizando a função predict e a variável "modelo", faça a previsão de quanto seria o peso de uma pessoa de 180cm neste dataset:
+
+```{r}
+
+```
+
+_________________________________________________________________________________________
+
+Outliers
+
+Para identificação de outliers pode ser utiliza novamente o "boxplot()".
+
+```{r}
+boxplot.stats(imc$height)$out
+```
+
+```{r}
+boxplot.stats(imc$weight)$out
+
+```
+
+```{r}
+boxplot.stats(imc$index)$out
+
+```
+
+Ou seja, este dataset não possui outliers para nenhuma das variáveis.

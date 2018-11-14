@@ -1,0 +1,9 @@
+Exercicio 1 (linha 355) -
+
+t.test(imc$height,conf.level = 0.90)
+t.test(imc$weight,conf.level = 0.85)
+t.test(imc$index,conf.level = 0.99)
+
+Exercício 2 (linha 429)
+
+predict(modelo,data.frame(height=175))
